@@ -194,6 +194,11 @@ jobs:
           gh release download ${{ needs.get-release.outputs.smartcat_version }} \
             --pattern "sc--x86_64-unknown-linux-gnu.tar.gz" \
             --dir docker-binary
+          echo "list docker binary dir after extraction"
+          ls -l docker-binary/
+          ls -l docker-binary/*  # to see subdirs
+          echo " view pwd "
+          ls $(pwd)
           tar -xzf docker-binary/sc--x86_64-unknown-linux-gnu.tar.gz -C docker-binary
           chmod +x docker-binary/sc
 
