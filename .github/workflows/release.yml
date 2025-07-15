@@ -200,6 +200,9 @@ jobs:
           echo " view pwd "
           ls $(pwd)
           tar -xzf docker-binary/sc--x86_64-unknown-linux-gnu.tar.gz -C docker-binary
+          echo "listing again after untar"
+          ls -l docker-binary/
+          ls -l docker-binary/*  # to see subdirs
           chmod +x docker-binary/sc
 
       - name: Create Dockerfile
