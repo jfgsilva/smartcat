@@ -201,7 +201,7 @@ jobs:
       - name: Create Dockerfile
         run: |
           cat <<EOF > docker-binary/Dockerfile
-          FROM debian:bullseye-slim
+          FROM debian:bookworm-slim
           COPY sc /usr/local/bin/sc
           ENTRYPOINT ["sc"]
           EOF
