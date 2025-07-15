@@ -199,7 +199,8 @@ jobs:
           ls -l docker-binary/*  # to see subdirs
           echo " view pwd "
           ls $(pwd)
-          tar -xzf docker-binary/sc--x86_64-unknown-linux-gnu.tar.gz -C docker-binary
+          #  tar -xzf docker-binary/sc--x86_64-unknown-linux-gnu.tar.gz -C docker-binary
+          tar -xzf docker-binary/sc--x86_64-unknown-linux-gnu.tar.gz -C docker-binary --strip-components=1
           echo "listing again after untar"
           ls -l docker-binary/
           ls -l docker-binary/*  # to see subdirs
