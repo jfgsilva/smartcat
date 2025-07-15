@@ -15,29 +15,36 @@ env:
 on:
   push:
     # Enable when testing release infrastructure on a branch.
-    branches:
+    # branches:
     # - fix/release-ci-after-voice
-    - container-releases
-    # tags:
-    # - "[0-9]+.[0-9]+.[0-9]+"
-    # - "[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+"
+    tags:
+    - "[0-9]+.[0-9]+.[0-9]+"
+    - "[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+"
 jobs:
   get-release:
-    name: get-release
+    name: Get Release Tag
     runs-on: ubuntu-latest
-    # env:
-    # # Set to force version number, e.g., when no tag exists.
-    #   SMARTCAT_VERSION: TEST-0.0.0
     outputs:
-      smartcat_version: ${{ env.SMARTCAT_VERSION }}
+      smartcat_version: ${{ steps.extract_version.outputs.smartcat_version }}
     steps:
       - uses: actions/checkout@v4
-      - name: Get the release version from the tag
-        shell: bash
-        if: env.SMARTCAT_VERSION == ''
+
+      - name: Extract tag as version
+        id: extract_version
+        run: echo "smartcat_version=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: get-release
+    steps:
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "SMARTCAT_VERSION=$GITHUB_REF_NAME" >> $GITHUB_ENV
-          echo "version is: ${{ env.SMARTCAT_VERSION }}"
+          gh release create ${{ needs.get-release.outputs.smartcat_version }} \
+            --title "Release ${{ needs.get-release.outputs.smartcat_version }}" \
+            --notes "Automated release from CI"
 
   build-release:
       name: ${{ matrix.job.target }} (${{ matrix.job.os }})
